@@ -1,0 +1,63 @@
+Project UniversityTimetable {
+  database_type: 'PostgreSQL'
+  Note: 'University Timetable Management System'
+}
+
+Table users {
+  id integer [primary key]
+  name varchar
+  email varchar [unique]
+  email_verified_at timestamp
+  password varchar
+  remember_token varchar
+  role varchar [note: 'admin, teacher, student']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table courses {
+  id integer [primary key]
+  code varchar [unique]
+  name varchar
+  description text
+  credits integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table classrooms {
+  id integer [primary key]
+  name varchar
+  capacity integer
+  type varchar [note: 'Amphitheater, ClassRoom, Lab']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table groups {
+  id integer [primary key]
+  name varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table group_user {
+  id integer [primary key]
+  user_id integer [ref: > users.id]
+  group_id integer [ref: > groups.id]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table sessions {
+  id integer [primary key]
+  course_id integer [ref: > courses.id]
+  classroom_id integer [ref: > classrooms.id]
+  teacher_id integer [ref: > users.id]
+  group_id integer [ref: > groups.id]
+  start_time datetime
+  end_time datetime
+  type varchar [note: 'CM (Lecture), TD (Tutorial), TP (Practical)']
+  created_at timestamp
+  updated_at timestamp
+}
