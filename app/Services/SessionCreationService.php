@@ -20,7 +20,28 @@ class SessionCreationService
         $this->validateQuota($data);
         $this->checkForConflicts($data);
 
-        return CourseSession::create($data);
+        $session = CourseSession::create($data);
+        
+        $this->notifyStudents($session);
+
+        return $session;
+    }
+
+    /**
+     * Notify all students in the group about the new session.
+     */
+    private function notifyStudents(CourseSession $session): void
+    {
+        $students = $session->group->students;
+
+        foreach ($students as $student) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($student->email)
+                    ->send(new \App\Mail\SessionScheduled($session));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to notify student: ' . $student->id . '. Error: ' . $e->getMessage());
+            }
+        }
     }
 
     /**
