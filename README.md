@@ -7,6 +7,7 @@ Une application complète de gestion d'emplois du temps pour universités, const
 Suivez ces étapes simples pour démarrer le projet sur votre machine :
 
 ### 1. Installation
+
 Clonez le projet et installez les dépendances :
 
 ```bash
@@ -18,6 +19,7 @@ npm install
 ```
 
 ### 2. Configuration
+
 Configurez votre environnement :
 
 ```bash
@@ -29,11 +31,13 @@ php artisan key:generate
 ```
 
 Créez la base de données SQLite (ou configurez MySQL/PostgreSQL dans `.env`) :
+
 ```bash
 touch database/database.sqlite
 ```
 
 ### 3. Base de données
+
 Préparez la base de données :
 
 ```bash
@@ -42,6 +46,7 @@ php artisan migrate --seed
 ```
 
 ### 4. Lancement
+
 Démarrez les serveurs :
 
 ```bash
@@ -63,49 +68,58 @@ Accédez à l'application via `http://localhost:8000`.
 Voici une explication simplifiée pour vous aider à naviguer dans les données :
 
 ### 1. Utilisateurs & Rôles
-*   **Users** : C'est la table centrale pour l'authentification.
-*   Chaque `User` a un rôle spécifique : **Admin**, **Teacher** ou **Student**.
-*   Les enseignants et étudiants sont gérés via la table `users` avec des rôles différenciés.
+
+* **Users** : C'est la table centrale pour l'authentification.
+* Chaque `User` a un rôle spécifique : **Admin**, **Teacher** ou **Student**.
+* Les enseignants et étudiants sont gérés via la table `users` avec des rôles différenciés.
 
 ### 2. Cours et Enseignement
-*   **Courses** : Représente les matières/units d'enseignement avec leurs quotas horaires.
-*   Chaque cours peut avoir plusieurs **Sessions** (séances de cours).
-*   Les enseignants sont assignés aux cours via la table pivot `course_teacher`.
+
+* **Courses** : Représente les matières/units d'enseignement avec leurs quotas horaires.
+* Chaque cours peut avoir plusieurs **Sessions** (séances de cours).
+* Les enseignants sont assignés aux cours via la table pivot `course_teacher`.
 
 ### 3. Planification des Cours (Cœur du système)
-*   **CourseSessions** : Représente une séance de cours planifiée.
-*   Elle lie un **Cours**, une **Salle**, un **Enseignant**, et un **Groupe** d'étudiants.
-*   Chaque session a un **type** (CM, TD, TP) et des **horaires** définis.
+
+* **CourseSessions** : Représente une séance de cours planifiée.
+* Elle lie un **Cours**, une **Salle**, un **Enseignant**, et un **Groupe** d'étudiants.
+* Chaque session a un **type** (CM, TD, TP) et des **horaires** définis.
 
 ### 4. Gestion des Conflits
-*   Le système détecte automatiquement les conflits d'horaires.
-*   Un conflit peut être : **salle déjà occupée**, **enseignant indisponible**, ou **groupe déjà en cours**.
-*   Les quotas horaires par type de cours sont également vérifiés.
+
+* Le système détecte automatiquement les conflits d'horaires.
+* Un conflit peut être : **salle déjà occupée**, **enseignant indisponible**, ou **groupe déjà en cours**.
+* Les quotas horaires par type de cours sont également vérifiés.
 
 ## Comptes de Démonstration
+
 - **Admin**: admin@example.com / password
-- **Enseignant**: teacher@example.com / password  
+- **Enseignant**: teacher@example.com / password
 - **Étudiant**: student@example.com / password
 
 ## Fonctionnalités Clés
 
 ### 🔍 Détection de Conflits Intelligente
+
 - **Conflits de salles** : Empêche la double réservation d'une salle
 - **Conflits d'enseignants** : Vérifie la disponibilité des professeurs
 - **Conflits de groupes** : S'assure qu'un groupe n'a pas deux cours simultanés
 - **Chevauchements partiels** : Détecte même les conflits d'horaires partiels
 
 ### 📊 Gestion des Quotas Horaires
+
 - Respect des quotas par type de cours (CM, TD, TP)
 - Calcul automatique des heures déjà planifiées
 - Blocage si le quota est dépassé
 
 ### 🎯 Services Métier
+
 - **ConflictDetectionService** : Détection complète des conflits
 - **SessionCreationService** : Création sécurisée des sessions
 - **TimeSlot** : Objet valeur pour la gestion des créneaux horaires
 
 ### 🧪 Tests Automatisés
+
 - Suite de tests complète avec PHPUnit
 - Tests unitaires pour les services métier
 - Tests d'intégration pour les fonctionnalités admin
@@ -114,6 +128,7 @@ Voici une explication simplifiée pour vous aider à naviguer dans les données 
 ## Architecture Technique
 
 ### Stack Technologique
+
 - **Backend** : Laravel 12, PHP 8.3
 - **Frontend** : Livewire 3, Flux UI, Tailwind CSS 4
 - **Base de données** : SQLite (développement), MySQL/PostgreSQL (production)
@@ -121,6 +136,7 @@ Voici une explication simplifiée pour vous aider à naviguer dans les données 
 - **Authentification** : Laravel Fortify
 
 ### Structure des Dossiers
+
 ```
 app/
 ├── Http/Controllers/Admin/    # CRUD admin
@@ -152,11 +168,13 @@ php artisan make:test MonTest --phpunit
 ## Développement avec Hot Reload
 
 Pour le développement avec rechargement automatique :
+
 ```bash
-composer run dev
+"composer run dev
 ```
 
 Cela lance simultanément :
+
 - Serveur Laravel (`php artisan serve`)
 - Compilation Vite avec hot-reload (`npm run dev`)
 

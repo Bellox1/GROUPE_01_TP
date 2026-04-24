@@ -11,7 +11,7 @@ class Course extends Model
     /** @use HasFactory<\Database\Factories\CourseFactory> */
     use HasFactory;
 
-    protected $fillable = ['code', 'name', 'description', 'credits'];
+    protected $fillable = ['code', 'name', 'description', 'credits', 'quota_cm', 'quota_td', 'quota_tp'];
 
     public function teachers(): BelongsToMany
     {

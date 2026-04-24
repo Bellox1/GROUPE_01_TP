@@ -14,15 +14,49 @@ class SessionCreationService
         $this->conflictDetectionService = $conflictDetectionService;
     }
 
-    /**
-     * Create a new course session with validation.
-     */
     public function createSession(array $data): CourseSession
     {
         $this->validateSessionData($data);
+        $this->validateQuota($data);
         $this->checkForConflicts($data);
 
         return CourseSession::create($data);
+    }
+
+    /**
+     * Validate course hourly quota.
+     */
+    private function validateQuota(array $data): void
+    {
+        $course = \App\Models\Course::findOrFail($data['course_id']);
+        
+        $type = strtoupper($data['type']);
+        $quotaField = match($type) {
+            'CM' => 'quota_cm',
+            'TD' => 'quota_td',
+            'TP' => 'quota_tp',
+            default => null
+        };
+
+        if (!$quotaField) {
+            return;
+        }
+
+        $quota = $course->$quotaField;
+        
+        $existingSessions = CourseSession::where('course_id', $course->id)
+            ->where('type', $data['type'])
+            ->get();
+
+        $totalMinutes = $existingSessions->reduce(function ($carry, $session) {
+            return $carry + $session->start_time->diffInMinutes($session->end_time);
+        }, 0);
+
+        $newSessionMinutes = \Carbon\Carbon::parse($data['start_time'])->diffInMinutes(\Carbon\Carbon::parse($data['end_time']));
+        
+        if (($totalMinutes + $newSessionMinutes) / 60 > $quota) {
+            throw new \InvalidArgumentException('Quota reached for this type of session.');
+        }
     }
 
     /**

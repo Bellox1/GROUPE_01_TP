@@ -10,7 +10,7 @@ use InvalidArgumentException;
  * Value Object representing a time slot with start and end times.
  * Encapsulates all overlap detection logic.
  */
-readonly class TimeSlot
+class TimeSlot
 {
     public Carbon $startTime;
 
